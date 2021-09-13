@@ -43,6 +43,9 @@ int ReadParam(char *fname)
 FILE	*fp;
 char	buf[1024];
 char	*ptr,*saveptr;
+FILE	*test_fp;
+char	test_buf[1024];
+//char	*test;
 
 	ParamFname=fname;
 
@@ -51,11 +54,26 @@ char	*ptr,*saveptr;
 		return(-1);
 	}
 
+	test_fp=fopen(fname,"r");
+/*	fgets(test_buf,sizeof(test_buf),test_fp);
+	//for(int i=0; i<sizeof(test_buf); i++){
+		//printf("test_buf: %s\n", test_buf);
+	//};
+	printf("-------------------------------------------\n");
+*/
+		printf("%s\n", fgets(test_buf,sizeof(test_buf),test_fp));
 	while(1){
 		fgets(buf,sizeof(buf),fp);
+		//printf("test_feof:%d\n", feof(test_fp));
+		//sleep(1);
+		//printf("%s\n", fgets(test_buf,sizeof(test_buf),test_fp));
+		
+		//printf("feof:%d\n", feof(fp));
 		if(feof(fp)){
+			printf("break_feof:%d\n", feof(fp));
 			break;
 		}
+
 		ptr=strtok_r(buf,"=",&saveptr);
 		if(ptr!=NULL){
 			if(strcmp(ptr,"IP-TTL")==0){
@@ -64,17 +82,23 @@ char	*ptr,*saveptr;
 				}
 			}
 			else if(strcmp(ptr,"MTU")==0){
+				printf("-----------------------\n\n\n");
 				if((ptr=strtok_r(NULL,"\r\n",&saveptr))!=NULL){
+					printf("ptr3:%s\n", ptr);
 					Param.MTU=atoi(ptr);
 					if(Param.MTU>ETHERMTU){
 						printf("ReadParam:MTU(%d) <= ETHERMTU(%d)\n",Param.MTU,ETHERMTU);
 						Param.MTU=ETHERMTU;
 					}
+						printf("param.MTU:%i\n", Param.MTU);
 				}
 			}
 			else if(strcmp(ptr,"gateway")==0){
+				//printf("-----------------------\n\n\n");
 				if((ptr=strtok_r(NULL,"\r\n",&saveptr))!=NULL){
+					//printf("ptr3:%s\n", ptr);
 					Param.gateway.s_addr=inet_addr(ptr);
+					//printf("Param.gateway:%s\n", inet_ntoa(Param.gateway));
 				}
 			}
 			else if(strcmp(ptr,"device")==0){

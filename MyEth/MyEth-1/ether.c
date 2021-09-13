@@ -160,10 +160,15 @@ int EtherRecv(int soc,u_int8_t *in_ptr,int in_len)
 struct ether_header	*eh;
 u_int8_t	*ptr=in_ptr;
 int	len=in_len;
+char mac[32];
 
 	eh=(struct ether_header *)ptr;
+	printf("debug_type : %#x\n",htons(eh->ether_type));
+	fflush(stdout);
 	ptr+=sizeof(struct ether_header);
 	len-=sizeof(struct ether_header);
+	printf("debug_mac : %s\n", my_ether_ntoa_r(eh->ether_dhost,mac)); //debug
+	fflush(stdout);
 
 	if(memcmp(eh->ether_dhost,BcastMac,6)!=0&&memcmp(eh->ether_dhost,Param.vmac,6)!=0){
 		return(-1);
@@ -173,8 +178,14 @@ int	len=in_len;
 		ArpRecv(soc,eh,ptr,len);
 	}
 	else if(ntohs(eh->ether_type)==ETHERTYPE_IP){
+		printf("IP : %#x\n",htons(eh->ether_type));
+		fflush(stdout);
 		IpRecv(soc,in_ptr,in_len,eh,ptr,len);
 	}
+	else if(ntohs(eh->ether_type)==ETHERTYPE_IPV6){
+		printf("debug_not_arp_ip_type : %#x\n",htons(eh->ether_type));
+		fflush(stdout);
+	};
 
 	return(0);
 }

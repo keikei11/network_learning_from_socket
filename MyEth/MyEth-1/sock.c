@@ -149,6 +149,7 @@ int	soc;
 		close(soc);
 		return(-1);
 	}
+	printf("debug alert :  %d\n",if_req.ifr_ifindex);
 
 	sa.sll_family=PF_PACKET;
 	sa.sll_protocol=htons(ETH_P_ALL);

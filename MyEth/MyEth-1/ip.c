@@ -85,7 +85,7 @@ int	i;
 	for(i=0;i<IP_RECV_BUF_NO;i++){
 		IpRecvBuf[i].id=-1;
 	}
-
+	printf("this is debug_4 : %d\n",i);
 	return(0);
 }
 

@@ -99,21 +99,47 @@ int ending()
 {
 struct ifreq	if_req;
 
-	printf("ending\n");
+	printf("end\n");
 
 	if(DeviceSoc!=-1){
 		strcpy(if_req.ifr_name,Param.device);
 		if(ioctl(DeviceSoc,SIOCGIFFLAGS,&if_req)<0){
 			perror("ioctl");
 		}
+		printf("this is debug_3 : %c\n",if_req.ifr_flags); //debug
+		if(if_req.ifr_flags&IFF_UP){printf("UP ");}
+		if(if_req.ifr_flags&IFF_BROADCAST){printf("BROADCAST ");}
+		if(if_req.ifr_flags&IFF_PROMISC){printf("PROMISC ");}
+		if(if_req.ifr_flags&IFF_MULTICAST){printf("MULTICAST ");}
+		if(if_req.ifr_flags&IFF_LOOPBACK){printf("LOOPBACK ");}
+		if(if_req.ifr_flags&IFF_POINTOPOINT){printf("P2P ");}
+		printf("\n");
 
 		if_req.ifr_flags=if_req.ifr_flags&~IFF_PROMISC;
 		if(ioctl(DeviceSoc,SIOCSIFFLAGS,&if_req)<0){
 			perror("ioctl");
 		}
 
+		printf("this is debug_3 : %c\n",if_req.ifr_flags); //debug
+		if(if_req.ifr_flags&IFF_UP){printf("UP ");}
+		if(if_req.ifr_flags&IFF_BROADCAST){printf("BROADCAST ");}
+		if(if_req.ifr_flags&IFF_PROMISC){printf("PROMISC ");}
+		if(if_req.ifr_flags&IFF_MULTICAST){printf("MULTICAST ");}
+		if(if_req.ifr_flags&IFF_LOOPBACK){printf("LOOPBACK ");}
+		if(if_req.ifr_flags&IFF_POINTOPOINT){printf("P2P ");}
+		printf("\n");
+
 		close(DeviceSoc);
 		DeviceSoc=-1;
+
+		printf("this is debug_3 : %c\n",if_req.ifr_flags); //debug
+		if(if_req.ifr_flags&IFF_UP){printf("UP ");}
+		if(if_req.ifr_flags&IFF_BROADCAST){printf("BROADCAST ");}
+		if(if_req.ifr_flags&IFF_PROMISC){printf("PROMISC ");}
+		if(if_req.ifr_flags&IFF_MULTICAST){printf("MULTICAST ");}
+		if(if_req.ifr_flags&IFF_LOOPBACK){printf("LOOPBACK ");}
+		if(if_req.ifr_flags&IFF_POINTOPOINT){printf("P2P ");}
+		printf("return\n");
 	}
 
 	return(0);
