@@ -208,8 +208,10 @@ int main(int argc,char *argv[])
 {
 char	buf1[80];
 int	i,paramFlag;
-pthread_attr_t	attr;
-pthread_t	thread_id;
+pthread_attr_t	attr_1;
+pthread_t	thread_id_1;
+pthread_attr_t	attr_2;
+pthread_t	thread_id_2;
 
 	SetDefaultParam();
 
@@ -253,16 +255,28 @@ pthread_t	thread_id;
 
 	signal(SIGPIPE,SIG_IGN);
 
-	pthread_attr_init(&attr);
-	pthread_attr_setstacksize(&attr,102400);
-	pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
-	if(pthread_create(&thread_id,&attr,MyEthThread,NULL)!=0){
+	pthread_attr_init(&attr_1);
+	pthread_attr_setstacksize(&attr_1,102400);
+	//pthread_attr_setdetachstate(&attr_1,PTHREAD_CREATE_DETACHED);
+	pthread_attr_setdetachstate(&attr_1,PTHREAD_CREATE_JOINABLE);
+	
+	pthread_attr_init(&attr_2);
+	pthread_attr_setstacksize(&attr_2,102400);
+	//pthread_attr_setdetachstate(&attr_2,PTHREAD_CREATE_DETACHED);
+	pthread_attr_setdetachstate(&attr_2,PTHREAD_CREATE_JOINABLE);
+	
+	//
+	if(pthread_create(&thread_id_1,&attr_1,MyEthThread,NULL)!=0){
 		printf("pthread_create:error\n");
 	}
-	if(pthread_create(&thread_id,&attr,StdInThread,NULL)!=0){
-		printf("pthread_create:error\n");
-	}
+	printf("thread_id_1_MyEth:%ld\n",  thread_id_1);
 
+	
+	if(pthread_create(&thread_id_2,&attr_2,StdInThread,NULL)!=0){
+		printf("pthread_create:error\n");
+	}
+	printf("thread_id_2_StdIn:%ld\n",  thread_id_2 );
+	
 	if(ArpCheckGArp(DeviceSoc)==0){
 		printf("GArp check fail\n");
 		return(-1);
@@ -271,8 +285,15 @@ pthread_t	thread_id;
 	while(EndFlag==0){
 		sleep(1);
 	}
+	
+
+	printf("thread_id_1_MyEth:%ld\n",  thread_id_1);
+	printf("thread_id_2_StdIn:%ld\n",  thread_id_2);
 
 	ending();
+	
+	printf("thread_id_1_MyEth:%ld\n",  thread_id_1);
+	printf("thread_id_2_StdIn:%ld\n",  thread_id_2);
 
 	return(0);
 }
